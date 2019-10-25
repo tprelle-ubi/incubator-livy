@@ -559,14 +559,14 @@ def main():
         listening_port = 0
         if os.environ.get("LIVY_TEST") != "true":
             #Load spark into the context
-            exec('from pyspark.sql import HiveContext', global_dict)
+            exec('from pyspark.sql import SQLContext as HiveContext', global_dict)
             exec('from pyspark.streaming import StreamingContext', global_dict)
             exec('import pyspark.cloudpickle as cloudpickle', global_dict)
 
             from py4j.java_gateway import java_import, JavaGateway, GatewayClient
             from pyspark.conf import SparkConf
             from pyspark.context import SparkContext
-            from pyspark.sql import SQLContext, HiveContext, Row
+            from pyspark.sql import SQLContext, Row
             # Connect to the gateway
             gateway_port = int(os.environ["PYSPARK_GATEWAY_PORT"])
             try:

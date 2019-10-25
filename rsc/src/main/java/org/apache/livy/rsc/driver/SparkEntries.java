@@ -17,7 +17,6 @@
 
 package org.apache.livy.rsc.driver;
 
-import java.lang.reflect.Method;
 import java.util.concurrent.TimeUnit;
 
 import org.apache.spark.SparkConf;
@@ -26,7 +25,6 @@ import org.apache.spark.api.java.JavaSparkContext;
 import org.apache.spark.sql.SQLContext;
 import org.apache.spark.sql.SparkSession;
 import org.apache.spark.sql.SparkSession$;
-import org.apache.spark.sql.hive.HiveContext;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -37,7 +35,7 @@ public class SparkEntries {
   private volatile JavaSparkContext sc;
   private final SparkConf conf;
   private volatile SQLContext sqlctx;
-  private volatile HiveContext hivectx;
+  private volatile SQLContext hivectx;
   private volatile SparkSession sparksession;
 
   public SparkEntries(SparkConf conf) {
@@ -96,11 +94,11 @@ public class SparkEntries {
     return sparksession;
   }
 
-  public SQLContext sqlctx() {
+  public SQLContext sqlctx() throws Exception {
     if (sqlctx == null) {
       synchronized (this) {
         if (sqlctx == null) {
-          sqlctx = new SQLContext(sc());
+          sqlctx = sparkSession().sqlContext();
           LOG.info("Created SQLContext.");
         }
       }
@@ -108,11 +106,11 @@ public class SparkEntries {
     return sqlctx;
   }
 
-  public HiveContext hivectx() {
+  public SQLContext hivectx() throws Exception {
     if (hivectx == null) {
       synchronized (this) {
         if (hivectx == null) {
-          SparkConf conf = sc.getConf();
+          SparkConf conf = sc().getConf();
           if (conf.getBoolean("spark.repl.enableHiveContext", false) ||
             conf.get("spark.sql.catalogImplementation", "in-memory").toLowerCase()
               .equals("hive")) {
@@ -122,8 +120,8 @@ public class SparkEntries {
               LOG.warn("livy.repl.enable-hive-context is true but no hive-site.xml found on " +
                "classpath.");
             }
-            hivectx = new HiveContext(sc().sc());
-            LOG.info("Created HiveContext.");
+            hivectx = sparkSession().sqlContext();
+            LOG.info("Created hive SQLContext.");
           }
         }
       }

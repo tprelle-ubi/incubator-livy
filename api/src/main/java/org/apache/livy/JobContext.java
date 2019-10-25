@@ -22,7 +22,6 @@ import java.util.NoSuchElementException;
 
 import org.apache.spark.api.java.JavaSparkContext;
 import org.apache.spark.sql.SQLContext;
-import org.apache.spark.sql.hive.HiveContext;
 import org.apache.spark.streaming.api.java.JavaStreamingContext;
 
 /**
@@ -41,12 +40,12 @@ public interface JobContext {
   /**
    * @return The shared SQLContext instance.
    */
-  SQLContext sqlctx();
+  SQLContext sqlctx() throws Exception ;
 
   /**
-   * @return The shared HiveContext instance.
+   * @return The shared hive SQLContext instance.
    */
-  HiveContext hivectx();
+  SQLContext hivectx() throws Exception ;
 
   /**
    * @return The JavaStreamingContext which has already been created.

@@ -24,7 +24,6 @@ import java.util.NoSuchElementException;
 
 import org.apache.spark.api.java.JavaSparkContext;
 import org.apache.spark.sql.SQLContext;
-import org.apache.spark.sql.hive.HiveContext;
 import org.apache.spark.streaming.Duration;
 import org.apache.spark.streaming.api.java.JavaStreamingContext;
 
@@ -68,12 +67,12 @@ class JobContextImpl implements JobContext {
   }
 
   @Override
-  public SQLContext sqlctx() {
+  public SQLContext sqlctx() throws Exception {
     return sparkEntries.sqlctx();
   }
 
   @Override
-  public HiveContext hivectx() {
+  public SQLContext hivectx() throws Exception {
     return sparkEntries.hivectx();
   }
 

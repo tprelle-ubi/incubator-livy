@@ -96,7 +96,7 @@
 # http-header "X-Requested-By" in request if the http method is POST/DELETE/PUT/PATCH.
 # livy.server.csrf-protection.enabled =
 
-# Whether to enable HiveContext in livy interpreter, if it is true hive-site.xml will be detected
+# Whether to enable hive SQLContext in livy interpreter, if it is true hive-site.xml will be detected
 # on user request and then livy server classpath automatically.
 # livy.repl.enable-hive-context =
 

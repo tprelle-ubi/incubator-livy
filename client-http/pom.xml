@@ -110,58 +110,6 @@
   <build>
     <plugins>
       <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-shade-plugin</artifactId>
-        <executions>
-          <execution>
-            <id>shade</id>
-            <phase>package</phase>
-            <goals>
-              <goal>shade</goal>
-            </goals>
-            <configuration>
-              <shadedArtifactAttached>false</shadedArtifactAttached>
-              <artifactSet>
-                <includes>
-                  <include>*:*</include>
-                </includes>
-                <excludes>
-                  <exclude>org.apache.livy:livy-api</exclude>
-                </excludes>
-              </artifactSet>
-              <filters>
-                <!-- Some artifacts (e.g. kryo) bundle jars inside them, for some reason. -->
-                <filter>
-                  <artifact>*:*</artifact>
-                  <excludes>
-                    <exclude>*.jar</exclude>
-                    <exclude>META-INF/maven/**</exclude>
-                  </excludes>
-                </filter>
-              </filters>
-              <relocations>
-                <relocation>
-                  <pattern>com.esotericsoftware</pattern>
-                  <shadedPattern>org.apache.livy.shaded.kryo</shadedPattern>
-                </relocation>
-                <relocation>
-                  <pattern>com.fasterxml.jackson</pattern>
-                  <shadedPattern>org.apache.livy.shaded.jackson</shadedPattern>
-                </relocation>
-                <relocation>
-                  <pattern>org.apache.commons</pattern>
-                  <shadedPattern>org.apache.livy.shaded.apache.commons</shadedPattern>
-                </relocation>
-                <relocation>
-                  <pattern>org.apache.http</pattern>
-                  <shadedPattern>org.apache.livy.shaded.apache.http</shadedPattern>
-                </relocation>
-              </relocations>
-            </configuration>
-          </execution>
-        </executions>
-      </plugin>
-      <plugin>
         <groupId>org.scalatest</groupId>
         <artifactId>scalatest-maven-plugin</artifactId>
       </plugin>

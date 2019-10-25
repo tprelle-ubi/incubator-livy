@@ -20,7 +20,6 @@ import java.io.File
 
 import org.apache.spark.SparkContext
 import org.apache.spark.sql.SQLContext
-import org.apache.spark.sql.hive.HiveContext
 import org.apache.spark.streaming.StreamingContext
 
 import org.apache.livy.JobContext
@@ -39,8 +38,8 @@ class ScalaJobContext private[livy] (context: JobContext) {
   /** The shared SQLContext instance. */
   def sqlctx: SQLContext = context.sqlctx()
 
-  /** The shared HiveContext instance. */
-  def hivectx: HiveContext = context.hivectx()
+  /** The shared hive SQLContext instance. */
+  def hivectx: SQLContext = context.hivectx()
 
   /** Returns the StreamingContext which has already been created. */
   def streamingctx: StreamingContext = context.streamingctx().ssc

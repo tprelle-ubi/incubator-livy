@@ -208,7 +208,13 @@ object InteractiveSession extends Logging {
             if (new File(sparkHome, "RELEASE").isFile) {
               new File(sparkHome, "jars")
             } else {
-              new File(sparkHome, "assembly/target/scala-2.11/jars")
+              new File(sparkHome, "assembly/target/scala-*/jars")
+            }
+          case 3 =>
+            if (new File(sparkHome, "RELEASE").isFile) {
+              new File(sparkHome, "jars")
+            } else {
+              new File(sparkHome, "assembly/target/scala-2.12/jars")
             }
           case v =>
             throw new RuntimeException(s"Unsupported Spark major version: $sparkMajorVersion")
@@ -289,15 +295,15 @@ object InteractiveSession extends Logging {
       val sparkFiles = conf.get("spark.files").map(_.split(",")).getOrElse(Array.empty[String])
       hiveSiteFile(sparkFiles, livyConf) match {
         case (_, true) =>
-          debug("Enable HiveContext because hive-site.xml is found in user request.")
+          debug("Enable hive SQLContext because hive-site.xml is found in user request.")
           mergeConfList(datanucleusJars(livyConf, sparkMajorVersion), LivyConf.SPARK_JARS)
         case (Some(file), false) =>
-          debug("Enable HiveContext because hive-site.xml is found under classpath, "
+          debug("Enable hive SQLContext because hive-site.xml is found under classpath, "
             + file.getAbsolutePath)
           mergeConfList(List(file.getAbsolutePath), LivyConf.SPARK_FILES)
           mergeConfList(datanucleusJars(livyConf, sparkMajorVersion), LivyConf.SPARK_JARS)
         case (None, false) =>
-          warn("Enable HiveContext but no hive-site.xml found under" +
+          warn("Enable hive SQLContext but no hive-site.xml found under" +
             " classpath or user request.")
       }
     }
@@ -415,13 +421,13 @@ class InteractiveSession(
     } else {
       val uriFuture = Future { client.get.getServerUri.get() }
 
-      uriFuture.onSuccess { case url =>
+      uriFuture.foreach { case url =>
         rscDriverUri = Option(url)
         sessionSaveLock.synchronized {
           sessionStore.save(RECOVERY_SESSION_TYPE, recoveryMetadata)
         }
       }
-      uriFuture.onFailure { case e => warn("Fail to get rsc uri", e) }
+      uriFuture.failed.foreach { case e => warn("Fail to get rsc uri", e) }
 
       // Send a dummy job that will return once the client is ready to be used, and set the
       // state to "idle" at that point.
