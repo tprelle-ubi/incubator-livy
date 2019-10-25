@@ -68,12 +68,12 @@ class JobContextImpl implements JobContext {
   }
 
   @Override
-  public SQLContext sqlctx() {
+  public SQLContext sqlctx() throws Exception {
     return sparkEntries.sqlctx();
   }
 
   @Override
-  public HiveContext hivectx() {
+  public HiveContext hivectx() throws Exception {
     return sparkEntries.hivectx();
   }
 

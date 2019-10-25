@@ -41,12 +41,12 @@ public interface JobContext {
   /**
    * @return The shared SQLContext instance.
    */
-  SQLContext sqlctx();
+  SQLContext sqlctx() throws Exception ;
 
   /**
-   * @return The shared HiveContext instance.
+   * @return The shared hive SQLContext instance.
    */
-  HiveContext hivectx();
+  HiveContext hivectx() throws Exception ;
 
   /**
    * @return The JavaStreamingContext which has already been created.
